@@ -1,0 +1,72 @@
+.process-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 20px;
+  }
+  
+  .flow-step {
+    width: 200px;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  .step-content {
+    word-break: break-word;
+    line-height: 1.5;
+  }
+  
+  .arrow {
+    margin: 0 20px;
+    font-size: 24px;
+    color: #d6d3c7;
+  }
+  
+  .flow-step.completed {
+    background-color: #e6f7ff;
+    border-color: #91d5ff;
+  }
+  
+  .flow-step.processing {
+    background-color: #fff7e6;
+    border-color: #ffd591;
+    position: relative;
+  }
+  
+  .flow-step.processing::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffd591;
+    border-top-color: transparent;
+    border-radius: 50%;
+    bottom: 10px;
+    right: 10px;
+    animation: spin 1s linear infinite;
+  }
+  
+  .flow-step.clickable {
+    cursor: pointer;
+  }
+  
+  .flow-step.clickable:hover {
+    background-color: #bae7ff;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }

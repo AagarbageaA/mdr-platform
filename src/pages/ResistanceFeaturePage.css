@@ -1,0 +1,28 @@
+/* Import shared styles */
+@import './FeaturePage.css';
+
+/* Resistance-specific styles */
+.feature-content .feature-header h2 {
+  color: #b73234; /* Different color for resistance heading */
+}
+
+.image-container.resistance-chart h3 {
+  font-weight: bold;
+}
+
+.resistance-marker {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #b73234;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.resistance-page .action-buttons .back-button {
+  background-color: #e0d6c0; /* Slightly different shade */
+}
+
+.resistance-page .action-buttons .back-button:hover {
+  background-color: #d0c5ae;
+}

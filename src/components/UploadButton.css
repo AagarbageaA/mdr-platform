@@ -1,0 +1,25 @@
+.upload-container {
+    text-align: center;
+  }
+  
+  .upload-button {
+    background-color: #d6d3c7;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .upload-button:hover {
+    background-color: #c6c3b7;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upload-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }

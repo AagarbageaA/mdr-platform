@@ -1,0 +1,59 @@
+.resistance-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f2f0e8;
+  }
+  
+  .resistance-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .resistance-result {
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .resistance-result h2 {
+    color: #565c6c;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 400px;
+    margin: 20px 0;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    margin-top: 20px;
+  }
+  
+  .feature-button {
+    background-color: #d4cab3;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .feature-button:hover {
+    background-color: #c4b89f;
+  }
+  
+  .button-icon {
+    margin-right: 8px;
+  }
