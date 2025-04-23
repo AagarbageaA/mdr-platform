@@ -1,14 +1,28 @@
+body {
+  background-color: #383834;  /* 設置全頁面的背景色 */
+  margin: 0;
+  padding: 0;
+}
+
+/* 主頁面 */
 .main-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 99vh;
+  width: 80%;  /* 設定頁面寬度為70% */
+  margin: 0 auto;  /* 使主頁面置中 */
+  background-color: transparent;  /* 讓主頁面背景透明，保持外圍背景顯示 */
+}
+
   
   .main-content {
     flex: 1;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    background-color: #f5f1ed;
+    color: #404653;
+    
   }
   
   .upload-section {
@@ -16,7 +30,7 @@
     justify-content: center;
     align-items: center;
     height: 200px;
-    background-color: #f5f5f5;
+    background-color: #70798c;
     border-radius: 8px;
     margin-bottom: 30px;
   }
@@ -27,7 +41,24 @@
   }
   
   .process-section h2 {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     font-size: 1.5rem;
-    color: #333;
+    color: #2e3440da;;
+  }
+
+  .clear-storage-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #757575;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .clear-storage-button:hover {
+    background-color: #ffffff21;
   }

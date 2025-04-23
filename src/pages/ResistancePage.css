@@ -1,59 +1,118 @@
+body {
+  background-color: #383834;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .resistance-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f2f0e8;
-  }
-  
-  .resistance-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .resistance-result {
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .resistance-result h2 {
-    color: #565c6c;
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .chart-container {
-    width: 100%;
-    height: 400px;
-    margin: 20px 0;
-  }
-  
-  .button-container {
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    margin-top: 20px;
-  }
-  
-  .feature-button {
-    background-color: #d4cab3;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    color: #333;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-  }
-  
-  .feature-button:hover {
-    background-color: #c4b89f;
-  }
-  
-  .button-icon {
-    margin-right: 8px;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 99vh;
+  width: 80%;
+  margin: 0 auto;
+  background-color: #f5f1ed;
+}
+
+.result-content {
+  flex: 1;
+  padding: 40px 24px;
+  width: 90%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.result-header {
+  margin-bottom: 20px;
+}
+
+.result-header h2 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.result-details {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.resistance-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  min-height: 400px;
+}
+
+.resistance-info h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.resistance-info p {
+  margin-bottom: auto;
+}
+
+.action-buttons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.chart-area {
+  flex: 2;
+  height: 400px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* 按鈕樣式統一 */
+.feature-button,
+.main-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.feature-button {
+  background-color: #d6d3c7;
+  color: #333;
+}
+
+.main-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.feature-button:hover,
+.main-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 載入狀態樣式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.loading {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #9b0404;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProcessFlow.css';
 
-const ProcessFlow = ({ currentStage, speciesResult }) => {
+const ProcessFlow = ({ currentStage, speciesResult, resistanceResult }) => {
   const navigate = useNavigate();
 
   const stages = {
@@ -44,7 +44,11 @@ const ProcessFlow = ({ currentStage, speciesResult }) => {
       >
         <div className="step-content">
           {currentStage === stages.ANALYZING_SPECIES ? '判斷菌種中...' : 
-           currentStage >= stages.SPECIES_DONE ? `判斷該數據菌種` : '判斷該數據菌種'}
+           currentStage >= stages.SPECIES_DONE ? <>
+           <div>{`抗藥性: ${resistanceResult?.resistantTo}`}</div>
+           <br></br>
+           <div className="comment">點擊以查看更多</div>
+         </> : '判斷該數據菌種'}
         </div>
       </div>
       
@@ -56,9 +60,19 @@ const ProcessFlow = ({ currentStage, speciesResult }) => {
         onClick={handleResistanceClick}
       >
         <div className="step-content">
-          {currentStage === stages.ANALYZING_RESISTANCE ? '判斷抗藥性中...' : 
-           currentStage === stages.RESISTANCE_DONE ? '判斷該菌株多重抗藥性' : '判斷該菌株多重抗藥性'}
-        </div>
+  {currentStage === stages.ANALYZING_RESISTANCE ? (
+    '判斷抗藥性中...'
+  ) : currentStage === stages.RESISTANCE_DONE ? (
+    <>
+      <div>{`抗藥性: ${resistanceResult?.resistantTo}`}</div>
+      <br></br>
+      <div className="comment">點擊以查看更多</div>
+    </>
+  ) : (
+    '判斷該菌株多重抗藥性'
+  )}
+</div>
+
       </div>
     </div>
   );

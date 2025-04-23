@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/species-result" element={<SpeciesResultPage />} />
         <Route path="/species-feature" element={<SpeciesFeaturePage />} />
-        <Route path="/resistance" element={<ResistanceFeaturePage />} />
+        <Route path="/resistance" element={<ResistancePage />} />
         <Route path="/resistance-feature" element={<ResistanceFeaturePage />} />
         <Route path="/history" element={<HistoryPage />} />
       </Routes>

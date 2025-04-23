@@ -1,12 +1,24 @@
+body {
+  background-color: #383834;  /* 設置全頁面的背景色 */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  
+}
 .history-page {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    width: 80%;
+    height: 99vh;
+    margin: 0 auto;  /* 使主頁面置中 */
+    background-color: #f5f1ed;
   }
   
   .history-content {
     flex: 1;
     padding: 20px;
+    width: 90%;
+    margin: 0 auto;
   }
   
   .history-header {

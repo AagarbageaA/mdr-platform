@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AppBar from '../components/AppBar';
 import UploadButton from '../components/UploadButton';
 import ProcessFlow from '../components/ProcessFlow';
-import { uploadFile, checkAnalysisStatus } from '../utils/api';
+import { loadAnalysisData, saveAnalysisData, clearAnalysisData } from '../utils/storage';
 import './MainPage.css';
+import { mockData } from '../utils/mockData';
 
 const MainPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentStage, setCurrentStage] = useState(0);
   const [analysisData, setAnalysisData] = useState(null);
-  const [analysisId, setAnalysisId] = useState(null);
-  
+
   const stages = {
     NOT_STARTED: 0,
     UPLOADING: 1,
@@ -18,89 +17,97 @@ const MainPage = () => {
     ANALYZING_SPECIES: 3,
     SPECIES_DONE: 4,
     ANALYZING_RESISTANCE: 5,
-    RESISTANCE_DONE: 6
+    RESISTANCE_DONE: 6,
   };
 
   useEffect(() => {
-    // 檢查用戶是否已登入
-    const checkLoginStatus = () => {
-      const token = localStorage.getItem('token');
-      setIsLoggedIn(!!token);
-    };
-
-    checkLoginStatus();
+    // 從 localStorage 中載入資料
+    const savedData = loadAnalysisData();
+    console.log('Loaded saved data:', savedData);  // 打印載入的資料
+    if (savedData) {
+      setAnalysisData(savedData);
+      setCurrentStage(savedData.resistanceResult ? stages.RESISTANCE_DONE : stages.SPECIES_DONE);
+    }
   }, []);
 
-  useEffect(() => {
-    // 如果有分析ID，則定期檢查分析狀態
-    if (analysisId) {
-      const interval = setInterval(async () => {
-        try {
-          const status = await checkAnalysisStatus(analysisId);
-          
-          if (status.stage === 'species_analysis_complete') {
-            setCurrentStage(stages.SPECIES_DONE);
-            setAnalysisData(prev => ({
-              ...prev,
-              speciesResult: status.species_result
-            }));
-            
-            // 開始抗藥性分析
-            setCurrentStage(stages.ANALYZING_RESISTANCE);
-          } 
-          else if (status.stage === 'resistance_analysis_complete') {
-            setCurrentStage(stages.RESISTANCE_DONE);
-            setAnalysisData(prev => ({
-              ...prev,
-              resistanceResult: status.resistance_result
-            }));
-            
-            // 分析完成，清除定時器
-            clearInterval(interval);
-          }
-        } catch (error) {
-          console.error('檢查分析狀態失敗:', error);
-        }
-      }, 3000);
-
-      return () => clearInterval(interval);
-    }
-  }, [analysisId, stages]);
-
-  const handleFileUpload = async (file) => {
+  const simulateAnalysis = async () => {
     setCurrentStage(stages.UPLOADING);
-    
-    try {
-      const response = await uploadFile(file);
-      setAnalysisId(response.analysis_id);
-      setCurrentStage(stages.UPLOADED);
-      
-      // 開始菌種分析
-      setCurrentStage(stages.ANALYZING_SPECIES);
-    } catch (error) {
-      console.error('上傳文件失敗:', error);
-      setCurrentStage(stages.NOT_STARTED);
-      alert('上傳失敗，請重試');
-    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setCurrentStage(stages.UPLOADED);
+  
+    // Step 1: 分析菌種
+    setCurrentStage(stages.ANALYZING_SPECIES);
+    const newSpeciesData = await new Promise(resolve => {
+      setTimeout(() => resolve(mockData[0].speciesResult), 2000);
+    });
+  
+    // 更新分析資料，暫時只有菌種結果
+    const partialData = {
+      analysisId: mockData[0].analysisId,
+      filename: mockData[0].filename,
+      speciesResult: newSpeciesData,
+    };
+    saveAnalysisData(partialData);
+    setAnalysisData(partialData);
+    setCurrentStage(stages.SPECIES_DONE);
+  
+    // Step 2: 分析抗藥性
+    setCurrentStage(stages.ANALYZING_RESISTANCE);
+    const newResistanceData = await new Promise(resolve => {
+      setTimeout(() => resolve(mockData[0].resistanceResult), 4000);
+    });
+  
+    const fullData = {
+      ...partialData,
+      resistanceResult: newResistanceData,
+      speciesFeatures: mockData[0].speciesFeatures,
+      resistanceFeatures: mockData[0].resistanceFeatures,
+    };
+    saveAnalysisData(fullData);
+    setAnalysisData(fullData);
+    setCurrentStage(stages.RESISTANCE_DONE);
+  };
+  
+
+  const handleFileUpload = (file) => {
+    clearAnalysisData();  // Clear old data if uploading a new file
+    simulateAnalysis();   // Simulate the analysis
+  };
+
+  // 清空 localStorage 的函式
+  const handleClearStorage = () => {
+    clearAnalysisData(); // 呼叫 clearAnalysisData 清空資料
+    setAnalysisData(null); // 清空當前顯示的分析數據
+    setCurrentStage(stages.NOT_STARTED); // 重設為初始階段
   };
 
   return (
     <div className="main-page">
-      <AppBar isLoggedIn={isLoggedIn} />
-      
+      <AppBar />
       <div className="main-content">
         <div className="upload-section">
           <UploadButton onFileUpload={handleFileUpload} />
         </div>
-        
         <div className="process-section">
           <h2>模型運作流程</h2>
-          <ProcessFlow 
-            currentStage={currentStage} 
-            speciesResult={analysisData?.speciesResult}
-          />
+          {/* 顯示當前資料的檔案名稱 */}
+          <div>
+            {analysisData ? (
+              <div>
+                <h3>當前資料：{analysisData.analysisId}</h3>
+              </div>
+            ) : (
+              <p>尚未選擇資料</p>
+            )}
+          </div>
+          <ProcessFlow currentStage={currentStage} speciesResult={analysisData?.speciesResult} resistanceResult={analysisData?.resistanceResult} />
         </div>
       </div>
+      
+      {/* 右下角的清空資料按鈕 */}
+      <button className="clear-storage-button" onClick={handleClearStorage}>
+        清空資料
+      </button>
     </div>
   );
 };

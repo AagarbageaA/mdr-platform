@@ -4,6 +4,7 @@ import AppBar from '../components/AppBar';
 import HistoryTable from '../components/HistoryTable';
 import BackButton from '../components/BackButton';
 import { getUserHistory } from '../utils/api';
+import { saveAnalysisData } from '../utils/storage';  // Helper function to save data to localStorage
 import './HistoryPage.css';
 
 const HistoryPage = () => {
@@ -31,8 +32,24 @@ const HistoryPage = () => {
   };
 
   const handleViewDetails = (recordId) => {
-    // Navigate to the main page with the selected record ID
-    navigate(`/?recordId=${recordId}`);
+    const selectedRecord = historyData.find(record => record.analysisId === recordId);
+    if (selectedRecord) {
+      // Save the selected record to localStorage with the appropriate data
+      const analysisData = {
+        analysisId: selectedRecord.analysisId,
+        speciesResult: selectedRecord.speciesResult,
+        resistanceResult: selectedRecord.resistanceResult,
+        speciesFeatures: selectedRecord.speciesFeatures,
+        resistanceFeatures: selectedRecord.resistanceFeatures
+      };
+
+      // Save the data in localStorage
+      saveAnalysisData(analysisData);
+      localStorage.setItem('currentStage', 0); // Reset stage to "NOT_STARTED"
+
+      // Navigate to the main page (which will load the selected analysis data)
+      navigate('/');
+    }
   };
 
   return (
@@ -45,7 +62,7 @@ const HistoryPage = () => {
         ) : (
           <HistoryTable 
             data={historyData} 
-            onViewDetails={handleViewDetails}
+            onViewDetails={handleViewDetails}  // Pass the handler to view details
           />
         )}
         <div className="button-container">

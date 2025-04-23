@@ -1,10 +1,31 @@
 /* Import shared styles */
 @import './FeaturePage.css';
 
-.feature-content .feature-header h2.species-heading {
+body {
+  background-color: #383834;  /* 設置全頁面的背景色 */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  
+}
+
+.feature-header h2.species-heading {
   color: #2c6975; /* Different color for species heading */
 }
 
+.feature-content{
+  width: 90%;
+    margin: 0 auto;
+}
+.feature-page{
+  display: flex;
+  flex-direction: column;
+  height: 99vh;
+  width: 80%;  /* 設定頁面寬度為70% */
+  margin: 0 auto;  /* 使主頁面置中 */
+  background-color: #f5f1ed;  /* 讓主頁面背景透明，保持外圍背景顯示 */
+
+}
 .image-container.species-chart h3 {
   font-weight: bold;
 }

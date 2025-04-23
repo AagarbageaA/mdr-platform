@@ -1,114 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppBar from '../components/AppBar';
-import { getSpeciesFeatures } from '../utils/api';
-import './FeaturePage.css';
-
+import BackButton from '../components/BackButton';
+import './SpeciesFeaturePage.css'
 const SpeciesFeaturePage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [featureImages, setFeatureImages] = useState({
-    pseudoIonImage: null,
-    msSpectrumImage: null
-  });
+  const [speciesData, setSpeciesData] = useState(null);
+  const [resistanceData, setResistanceData] = useState(null);
+  const [featureImages, setFeatureImages] = useState({ pseudoIonImage: null, msSpectrumImage: null });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 檢查用戶是否已登入
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    const savedData = localStorage.getItem('analysisData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setSpeciesData(parsedData.speciesResult); // Load species data
+      setResistanceData(parsedData.resistanceResult); // Load resistance data
 
-    // 加載特徵圖像
-    const loadFeatureImages = async () => {
-      try {
-        const analysisId = localStorage.getItem('currentAnalysisId');
-        if (!analysisId) {
-          navigate('/');
-          return;
-        }
-
-        const features = await getSpeciesFeatures(analysisId);
-        setFeatureImages({
-          pseudoIonImage: features.pseudoIonImage,
-          msSpectrumImage: features.msSpectrumImage
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('載入特徵圖像失敗:', error);
-        alert('載入特徵圖像失敗，請重試');
-        navigate('/species-result');
-      }
-    };
-
-    // 使用模擬數據進行開發
-    const loadMockImages = () => {
-      // 實際應用中，這些URL會從API獲取
+      // Assuming the images are also part of the data
       setFeatureImages({
-        pseudoIonImage: '/mock-data/pseudo-ion-image.png',
-        msSpectrumImage: '/mock-data/ms-spectrum-image.png'
+        pseudoIonImage: parsedData.speciesResult.pseudoIonImage || '/images/grad_cam.png', // default fallback
+        msSpectrumImage: parsedData.resistanceResult.msSpectrumImage || '/images/spectrum.png' // default fallback
       });
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  }, []);
 
-    // 在開發階段使用模擬數據
-    loadMockImages();
-    // 實際使用時切換為下面的代碼
-    // loadFeatureImages();
-  }, [navigate]);
-
-  const handleBackToSpecies = () => {
-    navigate('/species-result');
-  };
-
-  const handleBackToMain = () => {
-    navigate('/');
-  };
+  const handleBackToSpecies = () => navigate('/species-result');
+  const handleBackToMain = () => navigate('/');
 
   if (loading) {
     return (
       <div className="loading-container">
-        <AppBar isLoggedIn={isLoggedIn} />
+        <AppBar />
         <div className="loading">載入中...</div>
+      </div>
+    );
+  }
+
+  if (!speciesData || !resistanceData) {
+    return (
+      <div className="error-container">
+        <AppBar />
+        <div className="error-message">無法載入特徵數據</div>
       </div>
     );
   }
 
   return (
     <div className="feature-page">
-      <AppBar isLoggedIn={isLoggedIn} />
-      
+      <AppBar />
       <div className="feature-content">
-        <div className="feature-header">
-          <h2>數據菌種判斷 — 模型判斷特徵</h2>
-        </div>
-        
+        <h2>數據菌種判斷 — 模型判斷特徵</h2>
         <div className="feature-images">
-          <div className="image-container">
-            <h3>psuedo-ion 對於結果之重要性呈現</h3>
-            <img 
-              src={featureImages.pseudoIonImage} 
-              alt="Pseudo Ion Importance" 
-              className="feature-image" 
-            />
-          </div>
-          
-          <div className="image-container">
-            <h3>MALDI-TOF MS Spectrum (First Sample)</h3>
-            <img 
-              src={featureImages.msSpectrumImage} 
-              alt="MS Spectrum" 
-              className="feature-image" 
-            />
-          </div>
+        <div className="image-container">
+        <h3>psuedo-ion 對於結果之重要性呈現</h3>
+        {featureImages.pseudoIonImage && <img src='/images/grad_cam.png' alt="Pseudo Ion Importance" className="feature-image" />}
+      </div>
+      <div className="image-container">
+        <h3>MALDI-TOF MS Spectrum</h3>
+        {featureImages.msSpectrumImage && <img src='/images/spectrum.png' alt="MS Spectrum" className="feature-image" />}
+      </div>
+
         </div>
-        
         <div className="action-buttons">
-          <button className="back-button" onClick={handleBackToSpecies}>
-            回到上頁
-          </button>
-          <button className="main-button" onClick={handleBackToMain}>
-            回到主頁
-          </button>
+          <button className="back-button" onClick={handleBackToSpecies}>回到上頁</button>
+          <BackButton text="回到主頁" onClick={handleBackToMain} />
         </div>
       </div>
     </div>

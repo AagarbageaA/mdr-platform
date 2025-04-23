@@ -22,15 +22,16 @@ const HistoryTable = ({ data, onViewDetails }) => {
             </tr>
           ) : (
             data.map((item) => (
-              <tr key={item.id}>
+              <tr key={item.analysisId}>
                 <td>{item.filename}</td>
                 <td>{item.uploadDate}</td>
-                <td>{item.speciesResult}</td>
-                <td>{item.resistanceResult}</td>
+                {/* Render species and resistance result properly */}
+                <td>{item.speciesResult?.species}</td>  {/* Display species name */}
+                <td>{item.resistanceResult?.resistantTo.join(", ")}</td>  {/* Display resistance info */}
                 <td>
                   <button 
                     className="view-button"
-                    onClick={() => onViewDetails(item.id)}
+                    onClick={() => onViewDetails(item.analysisId)}
                   >
                     <FaSearch />
                   </button>

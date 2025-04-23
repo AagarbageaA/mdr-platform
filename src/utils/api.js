@@ -1,162 +1,80 @@
-// src/utils/api.js
+import { mockData } from '../utils/mockData';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
-
-// 用於處理API請求的輔助函數
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-};
-
-// 上傳數據文件
+// 模擬上傳檔案
 export const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const token = localStorage.getItem('token');
-  const headers = {};
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/upload`, {
+  const res = await fetch('/upload', {
     method: 'POST',
-    headers,
-    body: formData,
+    body: formData
   });
 
-  return handleResponse(response);
+  if (!res.ok) throw new Error('上傳失敗');
+  return await res.json();
 };
 
-// 檢查分析狀態
-export const checkAnalysisStatus = async (analysisId) => {
-  const token = localStorage.getItem('token');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/analysis/${analysisId}/status`, {
-    method: 'GET',
-    headers,
+// 模擬啟動菌種分析
+export const startSpeciesAnalysis = async (taskId) => {
+  // 這裡可以根據 taskId 模擬返回不同的結果
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].speciesResult); // 假設使用 mockData 的第一筆資料
+    }, 500); // 模擬 API 延遲
   });
-
-  return handleResponse(response);
 };
 
-// 獲取菌種分析結果
-export const getSpeciesResult = async (analysisId) => {
-  const token = localStorage.getItem('token');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/analysis/${analysisId}/species`, {
-    method: 'GET',
-    headers,
+// 模擬啟動抗藥性分析
+export const startResistanceAnalysis = async (taskId) => {
+  // 這裡可以根據 taskId 模擬返回不同的結果
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].resistanceResult); // 假設使用 mockData 的第一筆資料
+    }, 2000); // 模擬 API 延遲
   });
-
-  return handleResponse(response);
 };
 
-// 獲取菌種特徵
-export const getSpeciesFeatures = async (analysisId) => {
-  const token = localStorage.getItem('token');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/analysis/${analysisId}/species/features`, {
-    method: 'GET',
-    headers,
+// 模擬取得菌種分析結果
+export const getSpeciesResult = async (taskId) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].speciesResult); // 假設使用 mockData 的第一筆資料
+    }, 500); // 模擬 API 延遲
   });
-
-  return handleResponse(response);
 };
 
-// 獲取抗藥性分析結果
-export const getResistanceResult = async (analysisId) => {
-  const token = localStorage.getItem('token');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/analysis/${analysisId}/resistance`, {
-    method: 'GET',
-    headers,
+// 模擬取得抗藥性分析結果
+export const getResistanceResult = async (taskId) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].resistanceResult); // 假設使用 mockData 的第一筆資料
+    }, 2000); // 模擬 API 延遲
   });
-
-  return handleResponse(response);
 };
 
-// 獲取抗藥性特徵
-export const getResistanceFeatures = async (analysisId) => {
-  const token = localStorage.getItem('token');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/analysis/${analysisId}/resistance/features`, {
-    method: 'GET',
-    headers,
-  });
-
-  return handleResponse(response);
-};
-
-// 獲取用戶歷史數據
+// 模擬取得使用者歷史分析紀錄
 export const getUserHistory = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('未登入');
-  }
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
-  };
-
-  const response = await fetch(`${API_BASE_URL}/user/history`, {
-    method: 'GET',
-    headers,
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData); // 假設返回所有的 mockData
+    }, 500); // 模擬 API 延遲
   });
-
-  return handleResponse(response);
 };
 
-// 用戶登入
-export const login = async (username, password) => {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username, password }),
+// 模擬取得抗藥性特徵資料
+export const getResistanceFeatures = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].resistanceFeatures); // 假設使用 mockData 的第一筆資料
+    }, 500); // 模擬 API 延遲
   });
-
-  const data = await handleResponse(response);
-  localStorage.setItem('token', data.token);
-  return data;
 };
 
-// 用戶登出
-export const logout = () => {
-  localStorage.removeItem('token');
+// 模擬取得菌種特徵資料
+export const getSpeciesFeatures = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData[0].speciesFeatures); // 假設使用 mockData 的第一筆資料
+    }, 500); // 模擬 API 延遲
+  });
 };

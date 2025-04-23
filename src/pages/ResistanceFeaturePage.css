@@ -1,6 +1,14 @@
 /* Import shared styles */
 @import './FeaturePage.css';
 
+body {
+  background-color: #383834;  /* 設置全頁面的背景色 */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  
+}
+
 /* Resistance-specific styles */
 .feature-content .feature-header h2 {
   color: #b73234; /* Different color for resistance heading */
