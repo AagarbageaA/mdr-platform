@@ -45,7 +45,7 @@ const ProcessFlow = ({ currentStage, speciesResult, resistanceResult }) => {
         <div className="step-content">
           {currentStage === stages.ANALYZING_SPECIES ? '判斷菌種中...' : 
            currentStage >= stages.SPECIES_DONE ? <>
-           <div>{`抗藥性: ${resistanceResult?.resistantTo}`}</div>
+           <div>{`菌種類型: ${speciesResult?.species}`}</div>
            <br></br>
            <div className="comment">點擊以查看更多</div>
          </> : '判斷該數據菌種'}
