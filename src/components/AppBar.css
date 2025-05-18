@@ -39,11 +39,13 @@
   padding: 8px;
   border-radius: 50%; /* 圓形頭像 */
 }
-
+.user-icon:hover {
+  background-color: #ded4c3; /* 使用者頭像背景色 */
+}
 /* 下拉菜單 */
 .dropdown-menu {
   position: absolute;
-  top: 30px;
+  top: 60px;
   right: 0;
   background-color: rgb(241, 230, 182);
   color: rgb(86, 85, 85);

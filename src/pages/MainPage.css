@@ -16,6 +16,7 @@ body {
 
   
   .main-content {
+    position: relative;
     flex: 1;
     padding: 20px;
     display: flex;
@@ -47,7 +48,7 @@ body {
   }
 
   .clear-storage-button {
-    position: fixed;
+    position: absolute;
     bottom: 20px;
     right: 20px;
     background-color: #757575;
@@ -60,5 +61,5 @@ body {
   }
   
   .clear-storage-button:hover {
-    background-color: #ffffff21;
+    background-color: #1f1717;
   }

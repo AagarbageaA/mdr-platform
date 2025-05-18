@@ -13,12 +13,12 @@ const ResistanceFeaturePage = () => {
     const savedData = localStorage.getItem('analysisData');
     if (savedData) {
       const parsedData = JSON.parse(savedData);
-      setSpeciesData(parsedData.speciesResult); // Load species data
+      setSpeciesData(parsedData.species_result); // Load species data
       setResistanceData(parsedData.resistanceResult); // Load resistance data
 
       // Assuming the images are also part of the data
       setFeatureImages({
-        pseudoIonImage: parsedData.speciesResult.pseudoIonImage || '/images/grad_cam.png', // default fallback
+        pseudoIonImage: parsedData.species_result.pseudoIonImage || '/images/grad_cam.png', // default fallback
         msSpectrumImage: parsedData.resistanceResult.msSpectrumImage || '/images/spectrum.png' // default fallback
       });
     }

@@ -1,0 +1,49 @@
+species,antibiotic
+Enterococcus faecium,Amoxicillin-Clavulanic acid
+Enterococcus faecium,Ampicillin
+Enterococcus faecium,Ampicillin-Sulbactam
+Enterococcus faecium,Gentamicin
+Enterococcus faecium,Gentamicin_high_level
+Enterococcus faecium,Levofloxacin
+Enterococcus faecium,Nitrofurantoin
+Enterococcus faecium,Piperacillin-Tazobactam
+Pseudomonas aeruginosa,Aztreonam
+Pseudomonas aeruginosa,Cefepime
+Pseudomonas aeruginosa,Ciprofloxacin
+Pseudomonas aeruginosa,Meropenem
+Pseudomonas aeruginosa,Piperacillin-Tazobactam
+Pseudomonas aeruginosa,Ticarcillin
+Pseudomonas aeruginosa,Ticarcillin-Clavulan acid
+Klebsiella pneumoniae,Cefuroxime
+Klebsiella pneumoniae,Cotrimoxazole
+Klebsiella pneumoniae,Fosfomycin
+Klebsiella pneumoniae,Fosfomycin-Trometamol
+Klebsiella pneumoniae,Levofloxacin
+Klebsiella pneumoniae,Nitrofurantoin
+Klebsiella pneumoniae,Norfloxacin
+Enterobacter cloacae,Ceftazidime
+Enterobacter cloacae,Ceftriaxone
+Enterobacter cloacae,Cefuroxime
+Enterobacter cloacae,Fosfomycin
+Enterobacter cloacae,Fosfomycin-Trometamol
+Enterobacter cloacae,Nitrofurantoin
+Enterobacter cloacae,Piperacillin-Tazobactam
+Enterobacter aerogenes,Ampicillin
+Enterobacter aerogenes,Ceftazidime
+Enterobacter aerogenes,Ceftriaxone
+Enterobacter aerogenes,Fosfomycin
+Enterobacter aerogenes,Piperacillin-Tazobactam
+Staphylococcus aureus,Amoxicillin-Clavulanic acid
+Staphylococcus aureus,Ampicillin
+Staphylococcus aureus,Ampicillin-Amoxicillin
+Staphylococcus aureus,Benzylpenicillin
+Staphylococcus aureus,Cefazolin
+Staphylococcus aureus,Cefepime
+Staphylococcus aureus,Ceftriaxone
+Staphylococcus aureus,Cefuroxime
+Staphylococcus aureus,Erythromycin
+Staphylococcus aureus,Imipenem
+Staphylococcus aureus,Meropenem
+Staphylococcus aureus,Oxacillin
+Staphylococcus aureus,Penicillin
+Staphylococcus aureus,Piperacillin-Tazobactam

@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import AppBar from '../components/AppBar';
 import UploadButton from '../components/UploadButton';
 import ProcessFlow from '../components/ProcessFlow';
-import { loadAnalysisData, saveAnalysisData, clearAnalysisData } from '../utils/storage';
+import { uploadFile, analyzeSpecies, analyze_resistance } from '../utils/api';
+import { useAnalysis } from '../context/AnalysisContext';
+import {
+  saveAnalysisData,
+  loadAnalysisData,
+  clearAnalysisData,
+} from '../utils/analysisStorage';  // ✅ 引入工具方法
 import './MainPage.css';
-import { mockData } from '../utils/mockData';
-
+import { useLocation, useNavigate } from 'react-router-dom'; // 加入 useLocation
 const MainPage = () => {
+  const { analysisData, setAnalysisData } = useAnalysis();
   const [currentStage, setCurrentStage] = useState(0);
-  const [analysisData, setAnalysisData] = useState(null);
-
+  const location = useLocation(); // 👈 取得來自 navigate 的 state
+  const navigate = useNavigate(); // 👈 用於清除 state
   const stages = {
     NOT_STARTED: 0,
     UPLOADING: 1,
@@ -20,65 +26,91 @@ const MainPage = () => {
     RESISTANCE_DONE: 6,
   };
 
+  // ✅ 頁面載入時自動讀取 localStorage 的資料
   useEffect(() => {
-    // 從 localStorage 中載入資料
-    const savedData = loadAnalysisData();
-    console.log('Loaded saved data:', savedData);  // 打印載入的資料
-    if (savedData) {
-      setAnalysisData(savedData);
-      setCurrentStage(savedData.resistanceResult ? stages.RESISTANCE_DONE : stages.SPECIES_DONE);
+    // 如果是從清除歷史導過來，清空分析資料
+    if (location.state?.shouldClearStorage) {
+      handleClearStorage(); // ✅ 清空資料
+      // 清除 state 避免再次觸發
+      navigate(location.pathname, { replace: true, state: {} });
+    } else {
+      const storedData = loadAnalysisData();
+      if (storedData) {
+        setAnalysisData(storedData);
+        setCurrentStage(stages.RESISTANCE_DONE);
+      }
     }
   }, []);
 
-  const simulateAnalysis = async () => {
+  // 上傳檔案後的處理
+  const handleFileUpload = async (file) => {
     setCurrentStage(stages.UPLOADING);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setCurrentStage(stages.UPLOADED);
-  
-    // Step 1: 分析菌種
-    setCurrentStage(stages.ANALYZING_SPECIES);
-    const newSpeciesData = await new Promise(resolve => {
-      setTimeout(() => resolve(mockData[0].speciesResult), 2000);
-    });
-  
-    // 更新分析資料，暫時只有菌種結果
-    const partialData = {
-      analysisId: mockData[0].analysisId,
-      filename: mockData[0].filename,
-      speciesResult: newSpeciesData,
-    };
-    saveAnalysisData(partialData);
-    setAnalysisData(partialData);
-    setCurrentStage(stages.SPECIES_DONE);
-  
-    // Step 2: 分析抗藥性
-    setCurrentStage(stages.ANALYZING_RESISTANCE);
-    const newResistanceData = await new Promise(resolve => {
-      setTimeout(() => resolve(mockData[0].resistanceResult), 4000);
-    });
-  
-    const fullData = {
-      ...partialData,
-      resistanceResult: newResistanceData,
-      speciesFeatures: mockData[0].speciesFeatures,
-      resistanceFeatures: mockData[0].resistanceFeatures,
-    };
-    saveAnalysisData(fullData);
-    setAnalysisData(fullData);
-    setCurrentStage(stages.RESISTANCE_DONE);
-  };
-  
+    try {
+      const response = await uploadFile(file);
+      const analysis_id = response.analysis_id;
 
-  const handleFileUpload = (file) => {
-    clearAnalysisData();  // Clear old data if uploading a new file
-    simulateAnalysis();   // Simulate the analysis
+      const newBaseData = {
+        ...response,
+        analysis_id: analysis_id,
+      };
+      console.log("current id:",analysis_id)
+      setAnalysisData(newBaseData);
+      saveAnalysisData(newBaseData);  // ✅ 初步儲存
+      setCurrentStage(stages.UPLOADED);
+
+      setCurrentStage(stages.ANALYZING_SPECIES);
+      const species_result = await analyzeSpecies(analysis_id);
+
+      // const parsedSpeciesData = {
+      //   species: species_result.meta_species,
+      //   probability: (species_result.meta_probability * 100).toFixed(2),
+      //   chartData: species_result.species_prob_list.map(([label, prob]) => ({
+      //     label,
+      //     value: prob * 100,
+      //   })),
+      // };
+
+      const updatedData = {
+        ...newBaseData,
+        species_result: species_result,
+      };
+      setAnalysisData(updatedData);
+      saveAnalysisData(updatedData);  // ✅ 儲存更新後資料
+      setCurrentStage(stages.SPECIES_DONE);
+      console.log("更新完species result");
+      setCurrentStage(stages.ANALYZING_RESISTANCE);
+      const resistance_result = await analyze_resistance(analysis_id);
+      console.log("resistance_result:", resistance_result);
+
+      // const parsedResistanceData = {
+      //   ...resistance_result,
+      //   chartData: resistance_result.resistance_tuples.map(({ antibiotic, prob }) => ({
+      //     label: antibiotic,
+      //     value: Number((prob * 100).toFixed(2)), // 保留兩位小數的百分比數值
+      //   }))
+
+      // };
+
+      const finalData = {
+        ...updatedData,
+        resistance_result: resistance_result,
+      };
+
+      setAnalysisData(finalData);
+      saveAnalysisData(finalData);  // ✅ 最終儲存
+      setCurrentStage(stages.RESISTANCE_DONE);
+
+    } catch (error) {
+      console.error('Error during analysis:', error);
+      alert(error.message);
+    }
   };
 
-  // 清空 localStorage 的函式
+  // ✅ 清空資料
   const handleClearStorage = () => {
-    clearAnalysisData(); // 呼叫 clearAnalysisData 清空資料
-    setAnalysisData(null); // 清空當前顯示的分析數據
-    setCurrentStage(stages.NOT_STARTED); // 重設為初始階段
+    setAnalysisData(null);
+    setCurrentStage(stages.NOT_STARTED);
+    clearAnalysisData();
   };
 
   return (
@@ -90,24 +122,26 @@ const MainPage = () => {
         </div>
         <div className="process-section">
           <h2>模型運作流程</h2>
-          {/* 顯示當前資料的檔案名稱 */}
           <div>
             {analysisData ? (
               <div>
-                <h3>當前資料：{analysisData.analysisId}</h3>
+                <h3>當前資料：{analysisData.analysis_id}</h3>
               </div>
             ) : (
               <p>尚未選擇資料</p>
             )}
           </div>
-          <ProcessFlow currentStage={currentStage} speciesResult={analysisData?.speciesResult} resistanceResult={analysisData?.resistanceResult} />
+          <ProcessFlow
+            currentStage={currentStage}
+            species_result={analysisData?.species_result}
+            resistance_result={analysisData?.resistance_result?.resistant_antibiotics}
+          />
         </div>
-      </div>
-      
-      {/* 右下角的清空資料按鈕 */}
-      <button className="clear-storage-button" onClick={handleClearStorage}>
+        <button className="clear-storage-button" onClick={handleClearStorage}>
         清空資料
       </button>
+      </div>
+      
     </div>
   );
 };

@@ -101,3 +101,48 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
+  .history-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .history-table-wrapper {
+    flex: 1 1 auto; /* 讓表格區域撐滿剩餘空間 */
+    overflow-y: auto;
+    max-height: 500px; /* 可依頁面調整高度 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    background: #fff;
+  }
+  
+  .button-container {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  
+  .clear-history-button {
+
+      display: flex;
+      align-items: center;
+      background-color: #757575;
+      border: none;
+      border-radius: 15px;
+      padding: 10px 20px;
+      color: #ffffff;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 0;
+      transition: background-color 0.3s ease;
+
+  }
+  
+  
+  .clear-history-button:hover {
+    background-color: #1f1717;;
+  }
+  
