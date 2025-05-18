@@ -3,21 +3,55 @@ import { useNavigate } from 'react-router-dom';
 import AppBar from '../components/AppBar';
 import ChartDisplay from '../components/ChartDisplay';
 import '../components/Button.css';
-import './SpeciesResultPage.css'
+import './SpeciesResultPage.css';
 import BackButton from '../components/BackButton';
+import { useAnalysis } from '../context/AnalysisContext';
+import { loadAnalysisData, saveAnalysisData, clearAnalysisData } from '../utils/analysisStorage';
+
 const SpeciesResultPage = () => {
+  const { analysisData, setAnalysisData } = useAnalysis();
   const [speciesData, setSpeciesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // 頁面一開始嘗試從 localStorage 還原資料到 context
   useEffect(() => {
-    const savedData = localStorage.getItem('analysisData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setSpeciesData(parsedData.speciesResult);
+    if (analysisData?.species_result) {
+      const raw = analysisData.species_result;
+  
+      const speciesName = raw.species || '未知菌種';
+      const probability = parseFloat(raw.probability) || 0;
+  
+      const labels = raw.chartData?.map(item => item.label) || [];
+      const dataValues = raw.chartData?.map(item => item.value) || [];
+  
+      const chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: '菌種機率 (%)',
+            data: dataValues,
+            backgroundColor: [],
+            borderColor: [],
+            borderWidth: 1,
+          }
+        ],
+      };
+  
+      setSpeciesData({
+        species: speciesName,
+        probability: probability.toFixed(2),
+        chartData: chartData,
+      });
+    } else {
+      console.warn('沒有 speciesResult 資料或格式不正確');
+      setSpeciesData(null);
     }
+  
+    // 不論有沒有資料，處理完都把 loading 設成 false
     setLoading(false);
-  }, []);
+  }, [analysisData]);
+  
 
   const handleViewFeatures = () => {
     navigate('/species-feature');

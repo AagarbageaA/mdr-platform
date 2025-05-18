@@ -12,26 +12,27 @@ const HistoryTable = ({ data, onViewDetails }) => {
             <th>上傳日期</th>
             <th>菌種判斷結果</th>
             <th>抗藥性判斷結果</th>
-            <th>操作</th>
+            <th>查看資料</th>
           </tr>
         </thead>
         <tbody>
           {data.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="no-data">尚無資料</td>
-            </tr>
+            <>
+              <tr>
+                <td colSpan="5" className="no-data">尚無資料</td>
+              </tr>
+            </>
           ) : (
             data.map((item) => (
-              <tr key={item.analysisId}>
-                <td>{item.filename}</td>
-                <td>{item.uploadDate}</td>
-                {/* Render species and resistance result properly */}
-                <td>{item.speciesResult?.species}</td>  {/* Display species name */}
-                <td>{item.resistanceResult?.resistantTo.join(", ")}</td>  {/* Display resistance info */}
+              <tr key={item.analysis_id}>
+                <td>{item.file_name}</td>
+                <td>{item.upload_time}</td>
+                <td>{item.species_result?.species}</td>
+                <td>{item.resistance_result?.resistant_antibiotics.join(", ")}</td>
                 <td>
                   <button 
                     className="view-button"
-                    onClick={() => onViewDetails(item.analysisId)}
+                    onClick={() => onViewDetails(item.analysis_id)}
                   >
                     <FaSearch />
                   </button>

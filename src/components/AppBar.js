@@ -34,17 +34,13 @@ const AppBar = () => {
       <div className="user-section">
         <div
           className="user-button"
-          onMouseEnter={() => setShowDropdown(true)}
-          onMouseLeave={() => setShowDropdown(false)}
+          onClick={() => setShowDropdown(!showDropdown)}
         >
           <div className="user-icon">👤</div>
           {showDropdown && (
             <div className="dropdown-menu">
               <div className="dropdown-item" onClick={handleHistoryClick}>
                 歷史上傳數據
-              </div>
-              <div className="dropdown-item" onClick={handleLogout}>
-                清除歷史
               </div>
             </div>
           )}

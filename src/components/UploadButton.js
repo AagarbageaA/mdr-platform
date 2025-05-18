@@ -1,5 +1,7 @@
+// UploadButton.js
 import React, { useRef } from 'react';
 import './UploadButton.css';
+import { uploadFile } from '../utils/api'; // 引入 api.js 中的上傳函數
 
 const UploadButton = ({ onFileUpload }) => {
   const fileInputRef = useRef(null);
@@ -10,12 +12,11 @@ const UploadButton = ({ onFileUpload }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.name.endsWith('.txt')) {
+    if (file) {
       onFileUpload(file);
-    } else {
-      alert('請上傳 .txt 格式的質譜數據文件');
     }
   };
+  
 
   return (
     <div className="upload-container">

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProcessFlow.css';
 
-const ProcessFlow = ({ currentStage, speciesResult, resistanceResult }) => {
+const ProcessFlow = ({ currentStage, species_result, resistance_result }) => {
   const navigate = useNavigate();
 
   const stages = {
@@ -30,48 +30,53 @@ const ProcessFlow = ({ currentStage, speciesResult, resistanceResult }) => {
   return (
     <div className="process-flow">
       <div className={`flow-step ${currentStage >= stages.UPLOADED ? 'completed' : ''}`}>
-        <div className="step-content">
-          模型分析上傳數據<br />(MALTI-TOF MS)
-        </div>
+        <div className="step-content">模型分析上傳數據<br />(MALTI-TOF MS)</div>
       </div>
       
       <div className="arrow">➡</div>
       
-      <div 
-        className={`flow-step ${currentStage >= stages.SPECIES_DONE ? 'completed clickable' : 
+      <div
+        className={`flow-step ${currentStage >= stages.SPECIES_DONE ? 'completed clickable' :
           currentStage === stages.ANALYZING_SPECIES ? 'processing' : ''}`}
         onClick={handleSpeciesClick}
       >
         <div className="step-content">
           {currentStage === stages.ANALYZING_SPECIES ? '判斷菌種中...' : 
-           currentStage >= stages.SPECIES_DONE ? <>
-           <div>{`菌種類型: ${speciesResult?.species}`}</div>
-           <br></br>
-           <div className="comment">點擊以查看更多</div>
-         </> : '判斷該數據菌種'}
+           currentStage >= stages.SPECIES_DONE ? <><div className="step-content space-y-1">
+           <div className="font-semibold">菌種類型:</div>
+           <div className="important-word">{species_result?.species || '無資料'}</div>
+           <div className="text-sm text-blue-500 cursor-pointer comment">點擊以查看更多</div>
+         </div></> : '判斷該數據菌種'}
         </div>
       </div>
       
       <div className="arrow">➡</div>
       
-      <div 
-        className={`flow-step ${currentStage === stages.RESISTANCE_DONE ? 'completed clickable' : 
+      <div
+        className={`flow-step ${currentStage === stages.RESISTANCE_DONE ? 'completed clickable' :
           currentStage === stages.ANALYZING_RESISTANCE ? 'processing' : ''}`}
         onClick={handleResistanceClick}
       >
         <div className="step-content">
-  {currentStage === stages.ANALYZING_RESISTANCE ? (
-    '判斷抗藥性中...'
-  ) : currentStage === stages.RESISTANCE_DONE ? (
-    <>
-      <div>{`抗藥性: ${resistanceResult?.resistantTo}`}</div>
-      <br></br>
-      <div className="comment">點擊以查看更多</div>
-    </>
-  ) : (
-    '判斷該菌株多重抗藥性'
-  )}
-</div>
+  {currentStage === stages.ANALYZING_RESISTANCE
+    ? '判斷抗藥性中...'
+    : currentStage === stages.RESISTANCE_DONE ? (
+        <>
+          <div className="step-content space-y-1">
+          <div className="text-gray-700">
+            對 <span className="important-word">
+              {resistance_result?.length || 0}
+            </span> 種抗生素具有抗藥性
+          </div>
+        </div>
+
+          <br />
+          <div className="comment">點擊以查看更多</div>
+              </>
+            ) : (
+              '判斷該菌株多重抗藥性'
+            )}
+      </div>
 
       </div>
     </div>

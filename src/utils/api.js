@@ -1,80 +1,94 @@
-import { mockData } from '../utils/mockData';
+const API_URL = 'http://localhost:5000/api';
 
-// 模擬上傳檔案
+// 上傳檔案
 export const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await fetch('/upload', {
+  const response = await fetch(`${API_URL}/upload`, {
     method: 'POST',
-    body: formData
+    body: formData,
   });
 
-  if (!res.ok) throw new Error('上傳失敗');
-  return await res.json();
+  const data = await response.json(); // ✅ 只解析一次
+
+  if (!response.ok) {
+    throw new Error(data.message || '上傳失敗');
+  }
+  console.log(data)
+  return data;
 };
 
-// 模擬啟動菌種分析
-export const startSpeciesAnalysis = async (taskId) => {
-  // 這裡可以根據 taskId 模擬返回不同的結果
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].speciesResult); // 假設使用 mockData 的第一筆資料
-    }, 500); // 模擬 API 延遲
+// 執行物種分析
+export const analyzeSpecies = async (analysis_id) => {
+  const response = await fetch(`${API_URL}/analysis/${analysis_id}/species`, {
+    method: 'POST',
   });
+
+  const data = await response.json(); // ✅ 只解析一次
+
+  if (!response.ok) {
+    throw new Error(data.error || '物種分析失敗');
+  }
+  console.log(data)
+  return data;
 };
 
-// 模擬啟動抗藥性分析
-export const startResistanceAnalysis = async (taskId) => {
-  // 這裡可以根據 taskId 模擬返回不同的結果
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].resistanceResult); // 假設使用 mockData 的第一筆資料
-    }, 2000); // 模擬 API 延遲
+// 執行抗藥性分析
+export const analyze_resistance = async (analysis_id) => {
+  const response = await fetch(`${API_URL}/analysis/${analysis_id}/resistance`, {
+    method: 'POST',
   });
+
+  const data = await response.json(); // ✅ 只解析一次
+
+  if (!response.ok) {
+    throw new Error(data.error || '抗藥性分析失敗');
+  }
+  console.log(data)
+  return data;
 };
 
-// 模擬取得菌種分析結果
-export const getSpeciesResult = async (taskId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].speciesResult); // 假設使用 mockData 的第一筆資料
-    }, 500); // 模擬 API 延遲
+// 查詢分析狀態
+export const checkStatus = async (analysis_id) => {
+  const response = await fetch(`${API_URL}/analysis/${analysis_id}/status`, {
+    method: 'GET',
   });
+
+  const data = await response.json(); // ✅ 只解析一次
+
+  if (!response.ok) {
+    throw new Error(data.message || '查詢狀態失敗');
+  }
+
+  return data;
 };
 
-// 模擬取得抗藥性分析結果
-export const getResistanceResult = async (taskId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].resistanceResult); // 假設使用 mockData 的第一筆資料
-    }, 2000); // 模擬 API 延遲
-  });
-};
-
-// 模擬取得使用者歷史分析紀錄
+// 取得歷史紀錄
 export const getUserHistory = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData); // 假設返回所有的 mockData
-    }, 500); // 模擬 API 延遲
+  const response = await fetch(`${API_URL}/history`, {
+    method: 'GET',
   });
+
+  const data = await response.json(); // ✅ 只解析一次
+
+  if (!response.ok) {
+    throw new Error('取得歷史紀錄失敗');
+  }
+
+  return data;
 };
 
-// 模擬取得抗藥性特徵資料
-export const getResistanceFeatures = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].resistanceFeatures); // 假設使用 mockData 的第一筆資料
-    }, 500); // 模擬 API 延遲
+export const clearUserHistory = async () => {
+  const response = await fetch(`${API_URL}/clearHistory`, {
+    method: 'POST',  // 你想用 POST
   });
-};
 
-// 模擬取得菌種特徵資料
-export const getSpeciesFeatures = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockData[0].speciesFeatures); // 假設使用 mockData 的第一筆資料
-    }, 500); // 模擬 API 延遲
-  });
+  if (!response.ok) {
+    throw new Error('清除歷史紀錄失敗');
+  }
+
+  // 假設後端沒回傳內容，可以直接回傳 true 表示成功
+  // 如果後端有回傳 JSON，這裡就要改成 await response.json()
+  return true;
 };
